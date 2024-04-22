@@ -1,0 +1,28 @@
+{
+    "name": "wagecentsconverter",
+    "version": "1.0.0",
+    "description": "Simple service to utilize google drive/sheets to convert XLSX files to CSV",
+    "main": "appService.js",
+    "scripts": {
+        "start": "node appService.js",
+        "startDev": "nodemon appService.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/slingr-stack/wagecents-converter"
+    },
+    "keywords": [
+        "slingr",
+        "sample",
+        "services"
+    ],
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    },
+    "dependencies": {
+        "@slingr/slingr-services": "^0.0.5",
+        "google-auth-library": "^9.8.0",
+        "googleapis": "^134.0.0"
+    }
+}

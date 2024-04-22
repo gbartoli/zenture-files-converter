@@ -15,11 +15,15 @@ This is a basic service that lets us send excell files to Google Drive, and then
 **Callbacks:** onUploadComplete - this gets called when the upload to google drive has been completed
 
 ```
-let res = svc.proxy.uploadFile({srcFile: '66265f5242571119f6f08975', folderId: '1TzVHo9a9q_g2LFVCOmX4xvVbCFU33Q9T', destination: 'myTestFile'}, {record: 'asdfxyx'}, {
-  onUploadComplete: function (res, data) {
-    sys.logs.info(`Upload completed event, source record ${data.record}`);
-    sys.logs.info(`Uploaded test file to google file id: ${res.data.googleFileId}`);
-  }
+let res = svc.proxy.uploadFile({
+      srcFile: '66265f5242571119f6f08975', 
+      folderId: '1TzVHo9a9q_g2LFVCOmX4xvVbCFU33Q9T', 
+      destination: 'myTestFile'
+    }, {record: 'asdfxyx'}, {
+    onUploadComplete: function (res, data) {
+      sys.logs.info(`Upload completed event, source record ${data.record}`);
+      sys.logs.info(`Uploaded test file to google file id: ${res.data.googleFileId}`);
+    }
 });
 ```
 
@@ -74,4 +78,27 @@ This will return an array of results like:
     "teamDriveId": "0AM-x8k98VucXUk9PVA"
   }
 ]
+```
+
+### downloadCsv
+
+**Label:** Download CSV
+**Name:** downloadCsv
+**Description:** Downloads the CSV of a converted file from google drive and uploads it to the platform
+
+This function downloads the converted CSV for a range of values in the sheet, and uploads it to Slingr as a CSV file. It
+gives the information about the created CSV file in the callback
+
+```
+let res = svc.proxy.downloadCsv(
+  {googleId: '1h2OSoKIHpIb_JV45PRoI6AjacSM9r6WkAW2MHiu8ROQ', range: "'Payroll Info'!A1:Z100"},
+  {record: 'asdfwerwe'},
+  {
+    onDownloadComplete: function(res, data) {
+      sys.logs.info(`Download completed event, data: ${JSON.stringify(data)}`);
+      sys.logs.info(`Created slingr file id: ${res.data.fileId}`);
+    }
+  }
+);
+log(JSON.stringify(res));
 ```
