@@ -10,9 +10,10 @@ const reloadCredentials = async () => {
     // attempt to load credentials from datastore
     creds = await svc.dataStores.creds.findOne({  name: 'google-credentials'});
     if(! creds) {
-        svc.appLogger.log('No credentials found, returning');
+        svc.appLogger.info('No credentials found, returning');
         return;
     }
+    svc.appLogger.info('Found credentials for ' + creds.client_email)
     // console.log('Loaded credentials: ', creds);
 }
 
