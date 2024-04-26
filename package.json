@@ -21,7 +21,7 @@
         "nodemon": "^2.0.20"
     },
     "dependencies": {
-        "@slingr/slingr-services": "^0.0.7",
+        "@slingr/slingr-services": "0.0.8",
         "google-auth-library": "^9.8.0",
         "googleapis": "^134.0.0"
     }

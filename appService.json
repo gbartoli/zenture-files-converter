@@ -36,7 +36,7 @@
     },
     "status": "ACTIVE",
     "stores": [{
-        "name": "dataStore1" 
+        "name": "creds" 
     }],
     "events": [
         {
@@ -66,6 +66,16 @@
             "label": "Set Credentials",
             "name": "setCredentials",
             "description": "Set the google service account credentials in the datastore"
+        },
+        {
+            "label": "Get Credentials",
+            "name": "getCredentials",
+            "description": "Returns the credentials in use by the end point, without the private_key"
+        },
+        {
+            "label": "Clear Credentials",
+            "name": "clearCredentials",
+            "description": "Removes the google credentials from the datastore"
         },
         {
             "label": "List Folders",

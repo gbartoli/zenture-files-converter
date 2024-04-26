@@ -1,19 +1,19 @@
 
 const fs = require('fs');
+const os = require('os');
 const svc = require('@slingr/slingr-services');
-// const {GoogleAuth} = require('google-auth-library');
 const {google} = require('googleapis');
 
 let creds;
 
 const reloadCredentials = async () => {
     // attempt to load credentials from datastore
-    creds = await svc.dataStores.dataStore1.findOne({  name: 'google-credentials'});
+    creds = await svc.dataStores.creds.findOne({  name: 'google-credentials'});
     if(! creds) {
-        console.log('No credentials found, returning');
+        svc.appLogger.log('No credentials found, returning');
         return;
     }
-    console.log('Loaded credentials: ', creds);
+    // console.log('Loaded credentials: ', creds);
 }
 
 const getDriveService = () => {
@@ -73,13 +73,13 @@ svc.functions.setCredentials = async (req) => {
             name: 'google-credentials',
             ...req.params
         };
-        await svc.dataStores.dataStore1.save(creds);
+        let resp = await svc.dataStores.creds.save(creds);
     } else {
         creds = {
             ...creds,
             ...req.params
         };
-        await svc.dataStores.dataStore1.update(creds);
+        await svc.dataStores.creds.update(creds);
     }
     await reloadCredentials();
     return {ok: true};
@@ -103,6 +103,19 @@ svc.functions.listFolders = async (req) => {
     }
 }
 
+svc.functions.getCredentials = async (req) => {
+    let deepCopy = JSON.parse(JSON.stringify(creds));
+    delete deepCopy.private_key;
+    return deepCopy;
+}
+
+svc.functions.clearCredentials = async (req) => {
+    if(creds) svc.dataStores.remove(creds._id);
+    await reloadCredentials();
+    console.log(creds);
+    return {ok: true};
+}
+
 svc.functions.uploadFile = async (req) => {
     let fileId = req?.params?.srcFile
     let destination = req?.params?.destination
@@ -113,9 +126,11 @@ svc.functions.uploadFile = async (req) => {
         return { error: 'No destination provided'};
     }
     let folderId = req?.params?.folderId;
-    // FIXME - waiting on platform team to fix proxy
-    // let res = await svc.files.download(fileId);
-    // console.log(res);
+    
+    let slingrFile = await svc.files.download(fileId);
+    let tmpDest = os.tmpdir() + `/${fileId}-${new Date().getTime()}`;
+    console.log(tmpDest);
+    fs.writeFileSync(tmpDest, slingrFile);
 
     const fileMetadata = {
         name: req?.params?.destination,
@@ -125,8 +140,7 @@ svc.functions.uploadFile = async (req) => {
 
     const media = {
         mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        // FIXME - this should use the file received from the platform
-        body: fs.createReadStream('tmp/PR_PayrollRegisterCheckLevelTotals_EP1_42.xlsx'),
+        body: fs.createReadStream(tmpDest),
     };
 
     try {
@@ -141,9 +155,14 @@ svc.functions.uploadFile = async (req) => {
             console.log('File creation complete, submitting fileUploaded event', res);
             console.log('Callback response data: ', responseData);
             svc.events.send('onUploadComplete', responseData, req.id);
+        }).finally(() => {
+            console.log(`Removing temp file ${tmpDest}`);
+            fs.unlinkSync(tmpDest);
+        }).catch((err) => {
+            svc.appLogger.error('Error sending file to google drive', err);
         });
     } catch (err) {
-        svc.logger.error('Error sending file to google drive', err);
+        svc.appLogger.error('Error sending file to google drive', err);
         return { error: 'Error sending file to google drive' };
     }
     return {ok: true};
