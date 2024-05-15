@@ -45,9 +45,19 @@
             "description": "Callback event for when a document is done uploading to google drive"
         },
         {
+            "label": "On Upload Error",
+            "name": "onUploadError",
+            "description": "Callback event for when an error ocurred uploading a file from google drive"
+        },
+        {
             "label": "On Download Complete",
             "name": "onDownloadComplete",
             "description": "Callback event for when a document is done downloading from google drive"
+        },
+        {
+            "label": "On Download Error",
+            "name": "onDownloadError",
+            "description": "Callback event for when an error ocurred downloading a file from google drive"
         }
     ],
     "functions": [
@@ -58,6 +68,10 @@
             "callbacks": [
                 {
                     "name": "onUploadComplete",
+                    "maxExpectedResponses": 1 
+                },
+                {
+                    "name": "onUploadError",
                     "maxExpectedResponses": 1 
                 }
             ]
@@ -89,6 +103,10 @@
             "callbacks": [
                 {
                     "name": "onDownloadComplete",
+                    "maxExpectedResponses": 1
+                },
+                {
+                    "name": "onDownloadError",
                     "maxExpectedResponses": 1
                 }
             ]

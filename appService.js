@@ -161,6 +161,7 @@ svc.functions.uploadFile = async (req) => {
             fs.unlinkSync(tmpDest);
         }).catch((err) => {
             svc.appLogger.error('Error sending file to google drive', err);
+            svc.events.send('onUploadError', err?.response?.data?.error ?? err, req.id);
         });
     } catch (err) {
         svc.appLogger.error('Error sending file to google drive', err);
@@ -198,7 +199,10 @@ svc.functions.downloadCsv = async (req) => {
                 }
             }
         ).catch(err => {
+            console.log('Error handler')
             svc.appLogger.error(`Service Error: Unable to parse range "${range}".`, err);
+            svc.events.send('onDownloadError', err?.response?.data?.error ?? err, req.id);
+            console.log('On download error sent')
         })
         return {ok: true};
     } catch (err) {
