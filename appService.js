@@ -197,7 +197,9 @@ svc.functions.downloadCsv = async (req) => {
                     svc.appLogger.error('Error saving CSV file:', err);
                 }
             }
-        );
+        ).catch(err => {
+            svc.appLogger.error(`Service Error: Unable to parse range "${range}".`, err);
+        })
         return {ok: true};
     } catch (err) {
         svc.appLogger.error('Error downloading data: ', err);
