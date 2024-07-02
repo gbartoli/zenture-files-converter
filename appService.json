@@ -110,6 +110,16 @@
                     "maxExpectedResponses": 1
                 }
             ]
+        },
+        {
+            "label": "Get Sheet Titles",
+            "name": "getSheetTitles",
+            "description": "Returns the list of sheet titles of an specific Google file"
+        },
+        {
+            "label": "Delete File",
+            "name": "deleteFile",
+            "description": "Delete a file from Google Drive"
         }
     ],
     "configuration":[
