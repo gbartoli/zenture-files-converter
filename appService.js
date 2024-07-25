@@ -223,11 +223,20 @@ svc.functions.downloadCsv = async (req) => {
           .join("\n");
         try {
           svc.files.upload(fileName, csvContant).then((data) => {
+            if(! data) {
+              console.log('No file created in slingr, raising an error');
+              svc.appLogger.warn('No file created in slingr, possibly due to an empty file');
+              throw "No file created in slingr";
+            }
             console.log("Got app data", data);
             svc.events.send("onDownloadComplete", data, req.id);
+          }).catch((err) => {
+            svc.appLogger.error("Error saving CSV file:", err);
+            svc.events.send("onDownloadError", err?.response?.data?.error ?? err, req.id);  
           });
         } catch (err) {
           svc.appLogger.error("Error saving CSV file:", err);
+          svc.events.send("onDownloadError", err?.response?.data?.error ?? err, req.id);
         }
       })
       .catch((err) => {
