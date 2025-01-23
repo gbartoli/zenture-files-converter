@@ -1,3 +1,4 @@
+
 const fs = require("fs");
 const os = require("os");
 const svc = require("@slingr/slingr-services");
@@ -37,12 +38,12 @@ const getSheetsService = () => {
 };
 
 svc.hooks.onSvcStart = async () => {
-  svc.logger.info("Wagecents converter started");
+  svc.logger.info("Zenture converter started");
   await reloadCredentials();
 };
 
 svc.hooks.onSvcStop = (cause) => {
-  svc.logger.info("Wagecents converter is stopping");
+  svc.logger.info("Zenture converter is stopping");
 };
 
 svc.functions.setCredentials = async (req) => {

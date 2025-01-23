@@ -1,6 +1,6 @@
 {
-    "label": "Wagecents XLSX to CSV converter",
-    "name": "wagecentsconverter",
+    "label": "Zenture XLSX to CSV converter",
+    "name": "zentureconverter",
     "apiVersion": "v1",
     "internal": false,
     "configurationType": "GLOBAL",
